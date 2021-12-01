@@ -8,32 +8,33 @@ import (
 	"strconv"
 )
 
-func readFile() {
+func readFile(f string) *os.File {
 
-	file, err := os.Open("input.txt")
+	file, err := os.Open(f)
 
 	if err != nil {
-		log.Fatalf("failed to open file input.txt")
+		log.Fatalf("failed to open file %s", f)
 	}
 
-	scanner := bufio.NewScanner(file)
-
-	scanner.Split(bufio.ScanLines)
-
-	var list []int
-	for scanner.Scan() {
-
-		num, _ := strconv.Atoi(scanner.Text())
-		list = append(list, num)
-	}
-
-	file.Close()
-
-	sonarSweep(list)
-
+	return file
 }
 
-func sonarSweep(input []int) {
+func convertStringToInt(f *os.File) []int {
+	scanner := bufio.NewScanner(f)
+	scanner.Split(bufio.ScanLines)
+
+	var l []int
+	for scanner.Scan() {
+		num, _ := strconv.Atoi(scanner.Text())
+		l = append(l, num)
+	}
+
+	f.Close()
+
+	return l
+}
+
+func sonarSweepA(input []int) int {
 
 	i := input[0]
 	increased := 0
@@ -45,9 +46,17 @@ func sonarSweep(input []int) {
 		i = num
 	}
 
-	fmt.Println("Increased count is ", increased)
+	return increased
 }
 
 func main() {
-	readFile()
+
+	fileName := "input.txt"
+	file := readFile(fileName)
+
+	var list []int
+	list = convertStringToInt(file)
+
+	result := sonarSweepA(list)
+	fmt.Println("Sonar Sweep A increased count is:", result)
 }
