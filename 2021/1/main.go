@@ -49,6 +49,24 @@ func sonarSweepA(input []int) int {
 	return increased
 }
 
+func slidingWindow(n []int, i int) int {
+	return n[i] + n[i+1] + n[i+2]
+}
+
+func sonarSweepB(input []int) int {
+
+	sum := slidingWindow(input, 0)
+	increased := 0
+
+	for i := 1; i <= len(input)-3; i++ {
+		if slidingWindow(input, i) > sum {
+			increased++
+		}
+		sum = slidingWindow(input, i)
+	}
+	return increased
+}
+
 func main() {
 
 	fileName := "input.txt"
@@ -59,4 +77,7 @@ func main() {
 
 	result := sonarSweepA(list)
 	fmt.Println("Sonar Sweep A increased count is:", result)
+
+	result = sonarSweepB(list)
+	fmt.Println("Sonar Sweep B increased count is:", result)
 }
