@@ -30,7 +30,7 @@ func readFile(f string) []string {
 	return input
 }
 
-func compute(input []string) int {
+func computeA(input []string) int {
 
 	depth, horizontal := 0, 0
 	for _, line := range input {
@@ -53,12 +53,38 @@ func compute(input []string) int {
 	return depth * horizontal
 }
 
+func computeB(input []string) int {
+
+	depth, horizontal, aim := 0, 0, 0
+	for _, line := range input {
+
+		kv := strings.Split(line, " ")
+		v, _ := strconv.Atoi(kv[1])
+		direction, count := kv[0], v
+
+		switch direction {
+		case "up":
+			aim -= count
+
+		case "down":
+			aim += count
+
+		case "forward":
+			horizontal += count
+			depth += (aim * count)
+		}
+	}
+	return depth * horizontal
+}
+
 func main() {
 
 	fileName := "input.txt"
 	list := readFile(fileName)
 
-	ans := compute(list)
+	ans := computeA(list)
 	fmt.Println("Answer for part A is:", ans)
 
+	ans = computeB(list)
+	fmt.Println("Answer for part B is:", ans)
 }
