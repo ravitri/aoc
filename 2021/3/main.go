@@ -29,7 +29,7 @@ func readFile(f string) []string {
 	return input
 }
 
-func mostCommonBit(in []string, pos int) rune {
+func mostAndLeastCommonBit(in []string, pos int) (rune, rune) {
 	one, zero := 0, 0
 	for _, bin := range in {
 		digit := bin[pos]
@@ -44,63 +44,31 @@ func mostCommonBit(in []string, pos int) rune {
 	}
 
 	if one > zero {
-		return '1'
+		return '1', '0'
 	}
-	return '0'
-}
-
-func LeastCommonBit(in []string, pos int) rune {
-	one, zero := 0, 0
-	for _, bin := range in {
-		digit := bin[pos]
-
-		switch digit {
-		case '0':
-			zero++
-
-		case '1':
-			one++
-		}
-	}
-
-	if one < zero {
-		return '1'
-	}
-	return '0'
-}
-
-func gammaA(input []string) int64 {
-
-	var output []rune
-	for i := 0; i < len(input[0]); i++ {
-		output = append(output, mostCommonBit(input, i))
-	}
-	ans, _ := strconv.ParseInt(string(output), 2, 64)
-	return ans
-}
-
-func epsilonA(input []string) int64 {
-
-	var output []rune
-	for i := 0; i < len(input[0]); i++ {
-		output = append(output, LeastCommonBit(input, i))
-	}
-	ans, _ := strconv.ParseInt(string(output), 2, 64)
-	return ans
+	return '0', '1'
 }
 
 func powerA(input []string) int64 {
 
-	g := gammaA(input)
-	e := epsilonA(input)
-	return g * e
+	gamma, epsilon := "", ""
+	for i := 0; i < len(input[0]); i++ {
+		most, least := mostAndLeastCommonBit(input, i)
+		gamma += string(most)
+		epsilon += string(least)
+	}
+	return (binaryToDecimal(gamma) * binaryToDecimal(epsilon))
+}
+
+func binaryToDecimal(input string) int64 {
+	output, _ := strconv.ParseInt(string(input), 2, 64)
+	return output
 }
 
 func main() {
-
 	fileName := "input.txt"
 	list := readFile(fileName)
 
 	ans := powerA(list)
-	fmt.Println("Power is ", ans)
+	fmt.Println("Power Consumption is ", ans)
 }
