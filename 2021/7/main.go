@@ -31,6 +31,26 @@ func readFile(f string) []string {
 	return input
 }
 
+func minimum(list []int) int {
+	min := math.MaxInt32
+	for i := range list {
+		if i < min {
+			min = i
+		}
+	}
+	return min
+}
+
+func maximum(list []int) int {
+	max := 0
+	for i := range list {
+		if i > max {
+			max = i
+		}
+	}
+	return max
+}
+
 func main() {
 
 	filename := "input.txt"
@@ -46,16 +66,19 @@ func main() {
 		fuel = append(fuel, val)
 	}
 
+	min := minimum(fuel)
+	max := maximum(fuel)
+
 	distance := math.MaxInt32
-	for _, i := range fuel {
+
+	for i := min; i <= max; i++ {
 		score := 0
+		dist := 0
 		for _, j := range fuel {
-			if i == j {
-				continue
-			}
-			score += int(math.Abs(float64(j) - float64(i)))
+			difference := int(math.Abs(float64(j - i)))
+			dist = difference * (difference + 1) / 2
+			score += dist
 		}
-		fmt.Printf("Score for %d is %d\n", i, score)
 		if score < distance {
 			distance = score
 		}
